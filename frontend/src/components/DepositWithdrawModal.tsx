@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAccount, useBalance, useEstimateGas, useGasPrice } from 'wagmi'
 import { parseEther } from 'viem'
 import { sepolia } from 'wagmi/chains'
-import { CASINO_ABI, CASINO_ADDRESS } from '../abi'
+import { CASINO_ADDRESS } from '../abi'
 
 type Mode = 'deposit' | 'withdraw'
 
@@ -197,17 +197,18 @@ export default function DepositWithdrawModal({
 
                 {/* Confirm button */}
                 <motion.button
-                  className="btn-gold"
+                  className={isBusy || !amount ? '' : 'btn-gold'}
                   onClick={handleConfirm}
                   disabled={isBusy || !amount}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: isBusy || !amount ? 1 : 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   style={{
                     width: '100%', border: 'none', padding: '13px',
                     fontFamily: "'Helvetica Neue', sans-serif",
                     fontSize: 10, fontWeight: 700, letterSpacing: 4,
-                    textTransform: 'uppercase', cursor: 'pointer', color: '#000',
-                    opacity: isBusy || !amount ? 0.4 : 1,
+                    textTransform: 'uppercase', cursor: isBusy || !amount ? 'not-allowed' : 'pointer',
+                    color: isBusy || !amount ? 'var(--text-muted)' : '#000',
+                    background: isBusy || !amount ? 'var(--border)' : undefined,
                   }}
                 >
                   {isBusy ? (tab === 'deposit' ? 'Depositing…' : 'Withdrawing…') : (tab === 'deposit' ? 'Deposit ETH' : 'Withdraw ETH')}

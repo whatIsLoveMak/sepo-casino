@@ -87,9 +87,27 @@ export default function DiceGame({ betAmount, setBetAmount, prediction, setPredi
       })
       const myLog = logs.find(l => (l.args as { player?: string }).player?.toLowerCase() === address?.toLowerCase())
       if (myLog) {
-        const args = myLog.args as { won: boolean; result: bigint; payout: bigint; prediction: bigint }
+        const args = myLog.args as { won: boolean; result: bigint; payout: bigint; prediction: bigint; betAmount: bigint }
         setOutcome({ won: args.won, result: args.result, payout: args.payout, prediction: args.prediction })
         animateRoll(Number(args.result), args.won)
+        // Save to localStorage so History shows without blockchain fetch
+        if (address) {
+          const key = `history_${address.toLowerCase()}`
+          const newEntry = {
+            txHash: myLog.transactionHash ?? '',
+            blockNumber: String(myLog.blockNumber ?? 0),
+            betAmount: String(args.betAmount),
+            prediction: String(args.prediction),
+            result: String(args.result),
+            won: args.won,
+            payout: String(args.payout),
+          }
+          try {
+            const existing = JSON.parse(localStorage.getItem(key) ?? '[]')
+            const updated = [newEntry, ...existing].slice(0, 10)
+            localStorage.setItem(key, JSON.stringify(updated))
+          } catch {}
+        }
       }
       setRolling(false)
       reset()

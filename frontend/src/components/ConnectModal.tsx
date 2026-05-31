@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useConnect, useAccount } from 'wagmi'
-import { injectedConnector, walletConnectConnector } from '../wagmi'
+import { injected, walletConnect } from 'wagmi/connectors'
 
 const WALLETS = [
   {
@@ -48,6 +48,8 @@ export default function ConnectModal({ open, onClose }: Props) {
   const { connect, isPending } = useConnect()
   const { isConnected } = useAccount()
 
+  const WC_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID as string
+
   useEffect(() => {
     document.body.classList.toggle('modal-open', open)
     return () => document.body.classList.remove('modal-open')
@@ -58,11 +60,11 @@ export default function ConnectModal({ open, onClose }: Props) {
   }, [isConnected])
 
   const handleMetaMask = () => {
-    connect({ connector: injectedConnector })
+    connect({ connector: injected() })
   }
 
   const handleWalletConnect = () => {
-    connect({ connector: walletConnectConnector })
+    connect({ connector: walletConnect({ projectId: WC_PROJECT_ID }) })
   }
 
   const handlers: Record<string, () => void> = {

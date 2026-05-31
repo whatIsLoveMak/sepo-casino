@@ -12,7 +12,6 @@ import History from './components/History'
 
 function GoldConnectButton({ onPlay }: { onPlay?: () => void }) {
   const [showConnect, setShowConnect] = useState(false)
-  const { isConnected } = useAccount()
 
   return (
     <>
