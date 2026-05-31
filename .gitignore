@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Environment files (contain secrets)
+contracts/.env
+frontend/.env
+
+# Build outputs
+frontend/dist/
+frontend/.superpowers/
+
+# Foundry
+contracts/cache/
+contracts/out/
+
+# Misc
+.DS_Store
+*.local
